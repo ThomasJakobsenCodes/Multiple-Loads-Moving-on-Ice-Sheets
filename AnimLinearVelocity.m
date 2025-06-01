@@ -1,5 +1,5 @@
 % Computing the deflection of the surface of an ice sheet due to a load
-% moving with constant linear velocity
+% moving with constant linear velocity for consecutive time values
 clear
 clc
 run('Constants.m'); % Loads the constant values
@@ -21,7 +21,10 @@ epsilon = 10^-12;
 Xi_norm = max(Xi_norm, epsilon); % prevent division by 0 error
 
 % Time
-t = 20; % seconds
+time_end = 20;
+time_steps = 100;
+time = linspace(0, time_end, time_steps);
+T = length(time);
 
 % Velocity
 velocity = [40, 10];
@@ -30,18 +33,28 @@ velocity = [40, 10];
 mass = 2000; % mass of the load in kg
 
 % Computing the displacement
-eta_hat = compute_eta_hat(Xi_x, Xi_y, X, Y, Xi_norm, t, velocity, mass);
-eta = real(ifft2((eta_hat)));
+eta_hat = zeros(N, N, length(time));
+for t = 1:T
+    eta_hat(:, :, t) = compute_eta_hat(Xi_x, Xi_y, X, Y, Xi_norm, time(t), velocity, mass);
+end
+eta = zeros(N, N, length(time));
+for t = 1:T
+    eta(:, :, t) = real(ifft2((eta_hat(:, :, t))));
+end
 
 % Plotting
-figure
-surf(X, Y, eta)
-title("Surface Displacement at Time ="+t)
-xlabel('X-axis (m)');
-ylabel('Y-axis (m)');
-zlabel('Displacement (m)');
-colorbar;
-shading interp;
+for t = 1:T
+    clf
+    surf(X, Y, eta(:, :, t))
+    axis([min(X,[],"all") max(X,[],"all") min(Y,[],"all") max(Y,[],"all") min(eta,[],"all") max(eta,[],"all")]);
+    title("Surface Displacement at Time ="+time(t))
+    xlabel('X-axis (m)');
+    ylabel('Y-axis (m)');
+    zlabel('Displacement (m)');
+    colorbar;
+    shading interp;
+    drawnow
+end
 
 % Function definitions
 function result = load_pressure(mass, x, y)

@@ -1,5 +1,5 @@
 % Computing the deflection of the surface of an ice sheet due to a load
-% moving with constant linear velocity
+% moving in an arbitrary path
 clear
 clc
 run('Constants.m'); % Loads the constant values
@@ -21,16 +21,13 @@ epsilon = 10^-12;
 Xi_norm = max(Xi_norm, epsilon); % prevent division by 0 error
 
 % Time
-t = 20; % seconds
-
-% Velocity
-velocity = [40, 10];
+t = 20;
 
 % Load mass
 mass = 2000; % mass of the load in kg
 
 % Computing the displacement
-eta_hat = compute_eta_hat(Xi_x, Xi_y, X, Y, Xi_norm, t, velocity, mass);
+eta_hat = compute_eta_hat(Xi_x, Xi_y, X, Y, Xi_norm, t, mass);
 eta = real(ifft2((eta_hat)));
 
 % Plotting
@@ -44,6 +41,15 @@ colorbar;
 shading interp;
 
 % Function definitions
+function result = path(t)
+% PATH Parameterization of the path the loads moves in
+%   result is a vector whose first component is the x-coordinate of the
+%   load position and the second component is the y-coordinate. I.eg.
+%   result=[x;y]
+    velocity = [40,10];
+    result = [velocity(1) * t; velocity(2) * t];
+end
+
 function result = load_pressure(mass, x, y)
     sigma = 10;
     result = mass * 1 / (2 * pi * sigma) * exp(-(x.^2 + y.^2) / (2 * sigma^2));
@@ -76,22 +82,20 @@ function result = compute_u(xi_norm, g_0, k, r)
                   .* g_0 ./ k - r.^2);
 end
 
-function result = integral(a, velocity_dot_xi, t)
-    result = (exp(-1i * t * velocity_dot_xi) - exp(-t * a)) ...
-             ./ (a - 1i * velocity_dot_xi);
-end
 
-
-function result = compute_eta_hat(xi_x, xi_y, x, y, xi_norm, t, velocity, mass)
+function result = compute_eta_hat(xi_x, xi_y, x, y, xi_norm, t, mass)
     g_0 = compute_g_0(xi_norm);
     k = compute_k(xi_norm);
     r = compute_r(g_0, k);
     u = compute_u(xi_norm, g_0, k, r);
 
     intial_w_hat = compute_w_hat(mass, k, x, y);
-    velocity_dot_xi = velocity(1) * xi_x + ...
-                      velocity(2) * xi_y;
-    integral1 = integral(r - 1i * u, velocity_dot_xi, t);
-    integral2 = integral(r + 1i * u, velocity_dot_xi, t);
-    result = 1i * g_0 ./ (2 * u) .* intial_w_hat .* (integral1 - integral2);
+    a = r - 1i*u;
+    b = r + 1i*u;
+    integrand = @(tau) exp(-1 * (t - tau) * a - 1i * ...
+                       ([1, 0] * path(tau) * xi_x + [0, 1] * path(tau) * xi_y)) ...
+                       - exp(-1 * (t - tau) * b - 1i * ...
+                       ([1, 0] * path(tau) * xi_x + [0, 1] * path(tau) * xi_y));
+    compute_integral = integral(integrand, 0, t, 'ArrayValued', true);
+    result = 1i * g_0 ./ (2 * u) .* intial_w_hat .* compute_integral;
 end
