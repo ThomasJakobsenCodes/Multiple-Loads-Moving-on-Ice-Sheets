@@ -22,4 +22,4 @@ If the user desires the code to produce plots for multiple specific values of t,
 
 As demonstrated in AnimGeneralSolutionMultiLoad.m the view function can be used to specify the viewpoint of the plots produced.
 
-The function load_pressure may also be modified, but it needs to be a rotationally symmetric load distribution.
+The function named "load_pressure" may also be modified, but it needs to be a rotationally symmetric load distribution.
