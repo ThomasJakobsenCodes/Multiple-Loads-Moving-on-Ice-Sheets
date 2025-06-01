@@ -9,7 +9,7 @@ classdef Constants
         h_water = 6.8;      % water depth
         h_ice = 0.17;       % ice thickness
         E = 5.1 * 10^8;     % Young's modulus
-        poisson = 1 / 3;     % Poisson's ratio
+        poisson = 0.33;     % Poisson's ratio
         D = Constants.E * Constants.h_ice^3 / (12 * (1 - Constants.poisson^2)); % flexural rigidity
         kappa = Constants.D / (Constants.rho_water * Constants.g); % hydroelastic parameter
         b = 0.41 * 2 * sqrt(Constants.g * Constants.rho_water * ...
