@@ -51,6 +51,7 @@ fig = figure;
 fig.WindowState = 'maximized';
 v = VideoWriter('plot.avi');
 v.FrameRate = 10;
+v.Quality = 100;
 open(v)
 for t = 1:T
     surf(X, Y, eta_s(:, :, t))
@@ -71,6 +72,7 @@ fig.WindowState = 'maximized';
 fig.WindowState = 'maximized';
 v = VideoWriter('contour.avi');
 v.FrameRate = 10;
+v.Quality = 100;
 open(v)
 for t = 1:T
     surf(X, Y, eta_s(:, :, t))
@@ -91,6 +93,7 @@ fig = figure;
 fig.WindowState = 'maximized';
 v = VideoWriter('plotfront.avi');
 v.FrameRate = 10;
+v.Quality = 100;
 open(v)
 for t = 1:T
     surf(X, Y, eta_s(:, :, t))
@@ -111,6 +114,7 @@ fig = figure;
 fig.WindowState = 'maximized';
 v = VideoWriter('plotfrontprofile.avi');
 v.FrameRate = 10;
+v.Quality = 100;
 open(v)
 for t = 1:T
     surf(X, Y, eta_s(:, :, t))
@@ -131,6 +135,7 @@ fig = figure;
 fig.WindowState = 'maximized';
 v = VideoWriter('plotback.avi');
 v.FrameRate = 10;
+v.Quality = 100;
 open(v)
 for t = 1:T
     surf(X, Y, eta_s(:, :, t))
@@ -151,6 +156,7 @@ fig = figure;
 fig.WindowState = 'maximized';
 v = VideoWriter('plotbackprofile.avi');
 v.FrameRate = 10;
+v.Quality = 100;
 open(v)
 for t = 1:T
     surf(X, Y, eta_s(:, :, t))
@@ -171,6 +177,7 @@ fig = figure;
 fig.WindowState = 'maximized';
 v = VideoWriter('plotside.avi');
 v.FrameRate = 10;
+v.Quality = 100;
 open(v)
 for t = 1:T
     surf(X, Y, eta_s(:, :, t))
@@ -191,6 +198,7 @@ fig = figure;
 fig.WindowState = 'maximized';
 v = VideoWriter('plotsideprofile.avi');
 v.FrameRate = 10;
+v.Quality = 100;
 open(v)
 for t = 1:T
     surf(X, Y, eta_s(:, :, t))

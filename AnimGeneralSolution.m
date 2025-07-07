@@ -43,6 +43,7 @@ end
 % Saving a video of the plot as this code will take a long time to run
 v = VideoWriter('myplot.avi');
 v.FrameRate = 1;
+v.Quality = 100;
 open(v)
 
 % Plotting
